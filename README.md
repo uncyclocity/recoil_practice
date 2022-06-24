@@ -1,4 +1,4 @@
-# 💾 MobX 사용하기
+# 💾 Recoil 사용하기
 
 > References <br> <a href="https://jforj.tistory.com/154">[React] 함수형 컴포넌트에서 Mobx 사용하기</a> _.J4J_
 
