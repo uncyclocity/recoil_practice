@@ -88,4 +88,33 @@ function App() {
 
 ## ⏱ 비동기 통신 selectors
 
-준비중입니다...
+```javascript
+export const selectUser = selectorFamily({
+  key: "selectOne",
+  get: (id: number) => async () => {
+    const user = fetch(`https://jsonplaceholder.typicode.com/users/${id}`).then(
+      (res) => res.json()
+    );
+    return user;
+  },
+});
+
+// 컴포넌트에서 사용 시
+
+const user = useRecoilValue < IUser > selectUser(id);
+```
+
+- Atom을 별도로 선언하여 파라미터를 받아줄 수도 있지만, `selectorFamily`를 활용해 get 메서드 내부에서 직접 파라미터를 받아줄 수 있다.
+- 한번 비동기 통신을 한 이후 같은 통신을 할 때 캐싱되어 있는 값을 추적하여 이를 사용하며, 이를 **캐싱**이라고 한다.
+
+```javascript
+root.render(
+  <RecoilRoot>
+    <Suspense>
+      <App />
+    </Suspense>
+  </RecoilRoot>
+);
+```
+
+- `Suspense`를 통해 비동기 통신 Pending 상태에서 값이 도착하지 않았기에 발생하는 오류를 해결할 수 있다.
