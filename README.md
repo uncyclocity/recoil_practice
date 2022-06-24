@@ -1,6 +1,6 @@
 # 💾 Recoil 사용하기
 
-> References <br> <a href="https://jforj.tistory.com/154">[React] 함수형 컴포넌트에서 Mobx 사용하기</a> _.J4J_
+> References <br> <a href="https://recoiljs.org/ko/docs/introduction/getting-started">Recoil 시작하기</a> _.meta inc._ <br> <a href="https://tech.osci.kr/2022/06/16/recoil-state-management-of-react/?fbclid=IwAR3QRp7UwcmeWpPp0pAIyI4exbwK4gvqCKF2LXCSSupnKwEV-vI2j7xPbVw">Recoil, 리액트의 상태관리 라이브러리</a> _._
 
 ## 📃 주요 개념
 
