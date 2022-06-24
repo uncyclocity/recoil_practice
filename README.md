@@ -1,46 +1,91 @@
-# Getting Started with Create React App
+# 💾 MobX 사용하기
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+> References <br> <a href="https://jforj.tistory.com/154">[React] 함수형 컴포넌트에서 Mobx 사용하기</a> _.J4J_
 
-## Available Scripts
+## 📃 주요 개념
 
-In the project directory, you can run:
+```javascript
+export const textState = atom({
+  key: "textState", // unique ID (with respect to other atoms/selectors)
+  default: "", // default value (aka initial value)
+});
+```
 
-### `npm start`
+- **Atoms**
+  - **상태의 단위**이다.
+  - atom이 업데이트 되면 해당 atom을 참조하는 컴포넌트들은 리렌더링이 된다.
+  - 여러 컴포넌트에서 사용할 경우 상태가 공유된다.
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+```javascript
+const charCountState = selector({
+  key: "charCountState", // unique ID (with respect to other atoms/selectors)
+  get: ({ get }) => {
+    const text = get(textState);
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+    return text.length;
+  },
+  set: ({ set }, newValue) => set(textState, newValue),
+});
+```
 
-### `npm test`
+- **Selectors**
+  - 상태를 기반으로 한 **파생 데이터**를 계산하는데 사용된다.
+  - 임의로 지정한 `get` 함수를 통해 atom이나 다른 Selector를 적절히 연산한 데이터를 도출한다.
+  - `set` 함수는 새로운 값을 받아 특정 상태의 값을 변경한다.
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+## 💻 사용하기
 
-### `npm run build`
+- 위의 <<주요 개념>>에서 예시로 든 Atom과 Selector을 사용하여 앱을 만들어 보자.
+- 루트 컴포넌트에 `RecoilRoot`를 넣는다. `RecoilRoot`의 자식 컴포넌트에서 Recoil을 사용할 수 있다.
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+```javascript
+import React from "react";
+import ReactDOM from "react-dom/client";
+import App from "./App";
+import { RecoilRoot } from "recoil";
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+const root = ReactDOM.createRoot(
+  document.getElementById("root") as HTMLElement
+);
+root.render(
+    <RecoilRoot>
+        <App />
+    </RecoilRoot>
+);
+```
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+```javascript
+import { textState } from "./atom"
+import { charCountState } from "./atom"
 
-### `npm run eject`
+function App() {
+    const [text, setText] = useRecoilState(textState)
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+    const count = useRecoilValue(charCountState)
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+    const onChange = (e) => {
+        setText(e.target.value)
+    }
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+    /*
+    selector의 setter 사용하여 입력 값 변경
+    const setNewText = useSetRecoilState(charCountState)
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+    const onChange = (e) => {
+        setNewText(e.target.value)
+    }
+    */
 
-## Learn More
+    return (
+        <div>
+            <input type="text" value={text} onChange={onChange}>
+            <br />
+            <p>Character Count : {count}</p>
+        </div>
+    )
+}
+```
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+## ⏱ 비동기 통신 selectors
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+준비중입니다...
